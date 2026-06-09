@@ -1,12 +1,23 @@
 name: My First Workflow
 # We specify when it should run (here for example when we push to the main bransh) 
 on:
+  # Manual trigger using the workflow_dispatch event
+  workflow_dispatch:
+
+  # Automatic trigger on push events to the main branch
   push:
     branches:
       - main
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
-  
+
+  # Automatic trigger on pull request events targeting the main branch
+  pull_request:
+    branches:
+      - main
+
+  # Scheduled trigger at 5:00 AM UTC, Monday through Friday
+  schedule:
+    - cron: '0 5 * * 1-5'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,10 +26,10 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v4
 
-    - name: Use Node.js 20
+    - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version: latest
 
     - name: Print a message
       run: echo "Hello, world!"
